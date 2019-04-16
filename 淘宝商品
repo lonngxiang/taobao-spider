@@ -1,0 +1,35 @@
+import requests
+import re
+from lxml import etree
+import json
+
+
+headers1 = {
+    "authority":"authority",
+    "cookie":"t=9112f19ggggUjn6IZNGOI_GrdT9tGz36F",
+    "user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.80 Safari/537.36",
+    "upgrade-insecure-requests":"1",
+
+}
+
+def request1(url):
+
+    # time.sleep(3)
+    print(url)
+    html=requests.get(url,headers=headers1)
+    print(html.text)
+    # json1=json.loads(html.text)['data']
+    json_html=re.findall('g_page_config = (.*);.*?g_srp_loadCss',html.text,re.S)[0]
+    print(json_html)
+    json1=json.loads(json_html)
+    # print(json1)
+    return json1
+
+
+taobao_url="https://s.taobao.com/search?q=笔记本"
+taobao_html=request1(taobao_url)
+
+print(len(taobao_html["mods"]["itemlist"]["data"]["auctions"]))
+for i in range(len(taobao_html["mods"]["itemlist"]["data"]["auctions"])):
+    print(taobao_html["mods"]["itemlist"]["data"]["auctions"][i]["nick"])
+    print(taobao_html["mods"]["itemlist"]["data"]["auctions"][i]["title"])
